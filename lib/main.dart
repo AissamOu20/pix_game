@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
 import 'package:pixel_game/pixel_adv.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Flame.device.fullScreen();
-  Flame.device.setLandscape();
+  await Flame.device.fullScreen();
+  await Flame.device.setLandscape();
+
   PixelAdv game = PixelAdv();
   runApp(GameWidget(game: kDebugMode ? PixelAdv() : game));
 }
