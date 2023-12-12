@@ -14,6 +14,7 @@ class PixelAdv extends FlameGame
   Color backgroundColor() => const Color(0xFF211F30);
   late final CameraComponent cam;
   late JoystickComponent joystick;
+  bool showjoystick = false;
   Player player = Player(character: 'Pink Man');
 
   @override
@@ -25,10 +26,52 @@ class PixelAdv extends FlameGame
         world: world, width: 640, height: 360);
     cam.viewfinder.anchor = Anchor.topLeft;
     addAll([cam, world]);
-    addJostick();
+    if (showjoystick) {
+      addJostick();
+    }
 
     return super.onLoad();
   }
 
-  void addJostick() {}
+  @override
+  void update(double dt) {
+    if (showjoystick) {
+      updateJoystick();
+    }
+
+    super.update(dt);
+  }
+
+  void addJostick() {
+    joystick = JoystickComponent(
+        background: SpriteComponent(
+            sprite: Sprite(images.fromCache('HUD/Joystick.png'))),
+        position: Vector2.all(13),
+        margin: EdgeInsets.only(left: 32, bottom: 100),
+        knob: SpriteComponent(
+          sprite: Sprite(images.fromCache('HUD/Knob.png')),
+        ));
+    add(joystick);
+  }
+
+  void updateJoystick() {
+    switch (joystick.direction) {
+      case JoystickDirection.left:
+      case JoystickDirection.downLeft:
+      case JoystickDirection.upLeft:
+        player.playerDirection = PlayerDirection.left;
+
+        break;
+      case JoystickDirection.right:
+      case JoystickDirection.downRight:
+      case JoystickDirection.upRight:
+        player.playerDirection = PlayerDirection.right;
+        break;
+      case JoystickDirection.idle:
+        player.playerDirection = PlayerDirection.none;
+        break;
+      default:
+        player.playerDirection = PlayerDirection.none;
+    }
+  }
 }
